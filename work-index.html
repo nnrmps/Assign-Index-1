@@ -33,26 +33,26 @@
         console.log("Replace: "+name1);
         console.log("Swap: "+name);
         
-        var WorkClone;
-        var DetailClone ;       
+        var WorkTime;
+        var Detail ;       
         var xhttp = new XMLHttpRequest();     
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var response1 = JSON.parse(xhttp.responseText);
-                WorkClone = response1;
+                WorkTime = response1;
                 //2.1
-                AverageWorkingTime(response1);
+                AverageWorkTime(response1);
                 var xhttp2 = new XMLHttpRequest();     
                 xhttp2.onreadystatechange = function() {
                     if (this.readyState == 3 && this.status == 200) {
-                        var res2 = JSON.parse(xhttp2.responseText);
-                        DetailClone = res2;
+                        var res_2 = JSON.parse(xhttp2.responseText);
+                        Detail = res_2;
                         //2.2
-                        AverageStartTimeAsOfficer(res2,WorkClone);
+                        AverageStartTimeOfficer(res_2,WorkClone);
                         //2.3
-                        MostWorkingTime(res2,WorkClone)
+                        MostWorkTime(res_2,WorkClone)
                         //2.4
-                        Came_Late(res2,WorkClone)
+                        CameLate(res_2,WorkClone)
                         }
                 };
                 xhttp2.open("GET", "employee-detail.json", true);
@@ -62,7 +62,7 @@
         xhttp.open("GET", "work-weekly.json", true);
         xhttp.send();
        
-        function AverageWorkingTime(response1) {
+        function AverageWorkTime(response1) {
             var sum_hh = 0;
             var sum_mm = 0;
             var sum_ss = 0;
@@ -70,11 +70,11 @@
             for (var i = 0; i< response1.Data.length;i++){
                     var End = response1.Data[i].endTime.split(' ');
                     var Start = response1.Data[i].startTime.split(' ');
-                    var End2 = End[1].split(':');
-                    var Start2 = Start[1].split(':');
-                    var hh = (End2[0]-12) +(12- Start2[0]);
-                    var mm1 = parseInt(End2[1]);
-                    var mm2 = Start2[1]-60;
+                    var End_2 = End[1].split(':');
+                    var Start_2 = Start[1].split(':');
+                    var hh = (End_2[0]-12) +(12- Start_2[0]);
+                    var mm1 = parseInt(End_2[1]);
+                    var mm2 = Start_2[1]-60;
                     if (mm2 < 0){
                         hh = hh-1;
                         mm1 = mm1 + Math.abs(mm2);
@@ -83,22 +83,22 @@
                             mm1 = mm1-60;
                         }
                     }
-                    var ss = Math.abs(End2[2] -Start2[2]);
+                    var s = Math.abs(End_2[2] -Start_2[2]);
                     sum_hh = sum_hh + hh;
                     sum_mm = sum_mm + mm1;
-                    sum_ss = sum_ss + ss;
+                    sum_ss = sum_ss + s;
                 }
                 sum_hh = sum_hh/response1.Data.length;
                 sum_mm = sum_mm/response1.Data.length;
-                var co = sum_mm;
+                var cc = sum_mm;
                 sum_ss = sum_ss/response1.Data.length;
                 var n = Math.abs(sum_hh.toFixed() - sum_hh) * 60;
                 if (sum_hh.toFixed() > sum_hh.toFixed(1)){
                     sum_mm = sum_mm - n;
                     if (sum_mm < 0){
                         sum_hh = sum_hh -1;
-                        co = co + n;
-                        sum_mm = co;
+                        cc = cc + n;
+                        sum_mm = cc;
                     }
                 }
                 else if (sum_hh.toFixed() < sum_hh.toFixed(2)){
@@ -106,40 +106,40 @@
                 }
                 console.log("2.1 Average working time of all employee this week = " + sum_hh.toFixed() + ":" + sum_mm.toFixed() + ":" + sum_ss.toFixed() + " ");
         }
-        function AverageStartTimeAsOfficer(detailclone,workclone) {
-            var sumhh = 0;
-            var summm = 0;
-            var sumss = 0;
+        function AverageStartTimeOfficer(detailclone,workclone) {
+            var sum_hh = 0;
+            var sum_mm = 0;
+            var sum_ss = 0;
             var count = 0;
             for (var i = 0; i< detailclone.employee.length;i++){
                 if (detailclone.employee[i].position == "officer"){
-                    for (var j = 0; j< WorkClone.Data.length;j++){
-                        if(detailclone.employee[i].employeeId == WorkClone.Data[j].employeeId){
-                            var Start = WorkClone.Data[j].startTime.split(' ');
-                            var Start2 = Start[1].split(':');
-                            sumhh = sumhh + parseInt(Start2[0]);
-                            summm = summm + parseInt(Start2[1]);
-                            sumss = sumss + parseInt(Start2[2]);
+                    for (var j = 0; j< WorkTime.Data.length;j++){
+                        if(detailclone.employee[i].employeeId == WorkTime.Data[j].employeeId){
+                            var Start = WorkTime.Data[j].startTime.split(' ');
+                            var Start_2 = Start[1].split(':');
+                            sum_hh = sum_hh + parseInt(Start_2[0]);
+                            sum_mm = sum_mm + parseInt(Start_2[1]);
+                            sum_ss = sum_ss + parseInt(Start_2[2]);
                             count = count + 1;
                         }
                     }
                 }
             }
             var n = 0;
-            sumhh = sumhh/count;
-            summm = summm/count;
-            sumss = sumss/count;
-            n = Math.abs(sumhh.toFixed() - sumhh) * 60;
-            if (sumhh.toFixed() > sumhh.toFixed(2)){
-                summm = Math.abs(summm - n);
+            sum_hh = sum_hh/count;
+            sum_mm = sum_mm/count;
+            sum_ss = sum_ss/count;
+            n = Math.abs(sum_hh.toFixed() - sum_hh) * 60;
+            if (sum_hh.toFixed() > sum_hh.toFixed(2)){
+                sum_mm = Math.abs(sum_mm - n);
             }
-            else if (sumhh.toFixed() < sumhh.toFixed(2)){
-                summm = summm + n;
+            else if (sum_hh.toFixed() < sum_hh.toFixed(2)){
+                sum_mm = sum_mm + n;
             }
             console.log("2.2 Average startTime for employee that has 'officer' as position this week = " + (sumhh).toFixed() + ":" + (summm).toFixed() + ":" + (sumss).toFixed() + " ");
         }
     
-        function MostWorkingTime(detailclone,workclone) {
+        function MostWorkTime(detail,worktime) {
             var WorkerID = []
             var sum_diff_time = []
             var count = 0;
@@ -149,20 +149,20 @@
             var c= 0;
             var max = [];
             var remember = 0;
-            for (var i = 0; i < detailclone.employee.length;i++){
+            for (var i = 0; i < detail.employee.length;i++){
                 sum_hh = 0;
                 sum_mm = 0;
                 sum_ss = 0;
                 c =0;
-                for (var j = 0; j < workclone.Data.length;j++) {
-                    if (detailclone.employee[i].employeeId == workclone.Data[j].employee){
-                        var End = workclone.Data[j].endTime.split(' ');
-                        var Start = workclone.Data[j].startTime.split(' ');
-                        var End2 = End[1].split(':');
-                        var Start2 = Start[1].split(':');
-                        var hh = (End2[0]-12) +(12- Start2[0]);
-                        var mm1 = parseInt(End2[1]);
-                        var mm2 = Start2[1]-60;
+                for (var j = 0; j < worktime.Data.length;j++) {
+                    if (detail.employee[i].employeeId == worktime.Data[j].employee){
+                        var End = worktime.Data[j].endTime.split(' ');
+                        var Start = worktime.Data[j].startTime.split(' ');
+                        var End_2 = End[1].split(':');
+                        var Start_2 = Start[1].split(':');
+                        var hh = (End_2[0]-12) +(12- Start_2[0]);
+                        var mm1 = parseInt(End_2[1]);
+                        var mm2 = Start_2[1]-60;
                         if (mm2 < 0){
                             hh = hh-1;
                             mm1 = mm1 + Math.abs(mm2);
@@ -171,7 +171,7 @@
                                 mm1 = mm1-60;
                             }
                         }
-                        var ss = Math.abs(End2[2] -Start2[2]);
+                        var ss = Math.abs(End_2[2] -Start_2[2]);
                         sum_hh = sum_hh + hh;
                         sum_mm = sum_mm + mm1;
                         sum_ss = sum_ss + ss;
@@ -217,50 +217,50 @@
                     }
                 }       
             }
-            console.log("2.3 most working time this week : " + detailclone.employee[remember].employeeId 
-            + " " + detailclone.employee[remember].firstname + " " + detailclone.employee[remember].lastname 
-            + " , " + detailclone.employee[remember].position + ", Working time is ==> "+sum_diff_time[remember])
+            console.log("2.3 most working time this week : " + detail.employee[remember].employeeId 
+            + " " + detail.employee[remember].firstname + " " + detail.employee[remember].lastname 
+            + " , " + detail.employee[remember].position + ", Working time is ==> "+sum_diff_time[remember])
             
         }
         var output = []
-        function Came_Late(detailclone,workclone) {
+        function CameLate(detail,worktime) {
             var index =0;
-            var index2 =0;
-            for (var i = 0; i < detailclone.employee.length;i++){
-                index2 = 0;
-                for (var j = 0; j < workclone.Data.length;j++) {
+            var index_2 =0;
+            for (var i = 0; i < detail.employee.length;i++){
+                index_2 = 0;
+                for (var j = 0; j < worktime.Data.length;j++) {
                     
-                    if (detailclone.employee[i].employeeId == workclone.Data[j].employeeId){
-                        var Start = workclone.Data[j].startTime.split(' ');
-                        var Start2 = Start[1].split(':');
-                        if (8 <= Start2[0]){
-                            if (30 < Start2[1]){
-                                if (index2 == 0){
+                    if (detail.employee[i].employeeId == worktime.Data[j].employeeId){
+                        var Start = worktime.Data[j].startTime.split(' ');
+                        var Start_2 = Start[1].split(':');
+                        if (8 <= Start_2[0]){
+                            if (30 < Start_2[1]){
+                                if (index_2 == 0){
                                     output.push(
                                         {
-                                        employeeId: detailclone.employee[i].employeeId,
-                                        firstname: detailclone.employee[i].firstname,
-                                        lastname: detailclone.employee[i].lastname,
-                                        position: detailclone.employee[i].position,
+                                        employeeId: detail.employee[i].employeeId,
+                                        firstname: detail.employee[i].firstname,
+                                        lastname: detail.employee[i].lastname,
+                                        position: detail.employee[i].position,
                                         dateTime: [                                      
                                         ]
                                     })   
-                                    index2 = 1;
+                                    index_2 = 1;
                                 }                             
-                                var lateHr = 0;
-                                var lateMM = 0;
+                                var latehr = 0;
+                                var latemm = 0;
                                 var total_late_time = 0;
-                                if ( 8 <= Start2[0]){
-                                    lateHr = (Start2[0] - 8) * 60;
-                                    if (30 < Start2[1]) {
-                                        lateMM = (Start2[1] - 30)
+                                if ( 8 <= Start_2[0]){
+                                    latehr = (Start_2[0] - 8) * 60;
+                                    if (30 < Start_2[1]) {
+                                        latemm = (Start_2[1] - 30)
                                     }
                                 }
                                
-                                total_late_time = lateHr + lateMM;
+                                total_late_time = latehr + latemm;
                                 output[index].dateTime.splice(1, 0, {
                                                 date: Start[0],
-                                                time: Start2[0] + ":" + Start2[1],
+                                                time: Start_2[0] + ":" + Start_2[1],
                                                 lateMinutes: total_late_time
                                             }   );
                             }
@@ -272,7 +272,7 @@
             
         }
     </script>
-    <button onclick="MostWorkingTime()">Try it</button>
+    <button onclick="MostWorkingTime()">Refresh</button>
         
 
 </body>
