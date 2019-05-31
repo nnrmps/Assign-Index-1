@@ -42,10 +42,10 @@
                 WorkTime = response1;
                 //2.1
                 AverageWorkTime(response1);
-                var xhttp2 = new XMLHttpRequest();     
-                xhttp2.onreadystatechange = function() {
+                var xhttp_2 = new XMLHttpRequest();     
+                xhttp_2.onreadystatechange = function() {
                     if (this.readyState == 3 && this.status == 200) {
-                        var res_2 = JSON.parse(xhttp2.responseText);
+                        var res_2 = JSON.parse(xhttp_2.responseText);
                         Detail = res_2;
                         //2.2
                         AverageStartTimeOfficer(res_2,WorkClone);
@@ -55,8 +55,8 @@
                         CameLate(res_2,WorkClone)
                         }
                 };
-                xhttp2.open("GET", "employee-detail.json", true);
-                xhttp2.send();
+                xhttp_2.open("GET", "employee-detail.json", true);
+                xhttp_2.send();
             }
         };
         xhttp.open("GET", "work-weekly.json", true);
