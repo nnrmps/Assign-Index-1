@@ -12,24 +12,28 @@
     <script>
         
          
-        
         //1. Swap & Replace
-        var name = ["Bow", "peam", "bilfer", "yoyo"];
-        var name1 = ["Bow", "peam", "bilfer", "yoyo"];
+        var data = ["Bow", "peam", "bilfer", "yoyo"];
+        var name1 = ["a", "b", "c", "d"];
+        
+
         function swap(input,index_A,index_B){
             var temp = input[index_A];
             input[index_A] = input[index_B];
             input[index_B] = temp;
         }
-        function replace(input,index_A,index_B){
+        
+        swap(name1,0,3);
+        console.log("Swap: "+name1);
+
+        function replace(input,index_C,index_D){
             
-            input[index_A] = input[index_B];
+            input[index_C] = input[index_D];
             
         }
-        replace(name1,0,1);
-        swap(name,1,3);
-        console.log("Replace: "+name1);
-        console.log("Swap: "+name);
+        replace(data,1,3);
+        
+        console.log("Replace: "+data);  
         
         var WorkTime;
         var Detail ;       
@@ -275,4 +279,3 @@
 
 </body>
 </html>
-
